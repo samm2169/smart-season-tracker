@@ -1,0 +1,84 @@
+Full Stack Developer Technical Assessment
+SmartSeason Field Monitoring System
+Overview
+Build a simple web application that helps track crop progress across multiple fields during a growing
+season.
+The goal is to demonstrate your ability to:
+● design a clean system
+● implement core business logic
+● build a usable interface
+Core Requirements
+1. Users & Access
+The system should support two roles:
+● Admin (Coordinator)
+● Field Agent
+Implement authentication and ensure users only access what is relevant to them.
+2. Field Management
+The system should allow:
+● Creating and managing fields
+● Assigning fields to field agents
+Each field should have, at minimum:
+● Name
+● Crop type
+● Planting date
+● Current stage
+You may structure your data model as you see fit.
+3. Field Updates
+Field Agents should be able to:
+● Update the stage of a field
+● Add notes or observations
+Admins should be able to:
+● View all fields
+● Monitor updates across agents
+4. Field Stages
+Use a simple lifecycle for fields (you may extend if needed):
+● Planted
+● Growing
+● Ready
+● Harvested
+5. Field Status Logic
+Each field should have a computed status based on its data.
+At minimum, handle:
+● Active
+● At Risk
+● Completed
+Define and implement reasonable logic for how status is determined.
+(Briefly explain your approach in the README.)
+6. Dashboard
+Provide a basic dashboard for:
+● Admin: overview of all fields
+● Field Agent: overview of assigned fields
+Include simple summaries such as:
+● total fields
+● status breakdown
+● any insights you find useful
+Technical Expectations
+You are free to choose your stack, but a typical setup may include:
+● Backend: Laravel, Django, or Node.js
+● Frontend: React (or similar)
+● Database: relational (MySQL/PostgreSQL)
+Focus on:
+● clean structure
+● working APIs
+● clear separation of concerns
+What to Submit
+● GitHub repository (frontend + backend or monorepo)
+● README with:
+○ setup instructions
+○ design decisions
+○ any assumptions made
+● Demo credentials
+● (Optional) Live deployment link
+Evaluation Criteria
+We are looking for:
+● clear thinking and sensible trade-offs
+● working, reliable functionality
+● clean and readable code
+● simple, intuitive UI
+● ability to translate requirements into a working system
+Notes
+● You do not need to over-engineer the solution
+● Keep it simple and functional
+● Prioritize clarity over completeness
+Deadline: 25/04/2026
+Submission: Email with repository link and access det

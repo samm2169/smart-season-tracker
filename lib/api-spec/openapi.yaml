@@ -3,13 +3,21 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: SmartSeason Field Monitoring System API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: users
+    description: User profile and role management
+  - name: fields
+    description: Field management
+  - name: updates
+    description: Field updates and observations
+  - name: dashboard
+    description: Dashboard summaries and insights
 paths:
   /healthz:
     get:
@@ -24,6 +32,341 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /users/me:
+    get:
+      operationId: getMe
+      tags: [users]
+      summary: Get current user profile
+      responses:
+        "200":
+          description: Current user profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /users:
+    get:
+      operationId: listUsers
+      tags: [users]
+      summary: List all users (admin only)
+      responses:
+        "200":
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /users/{id}/role:
+    patch:
+      operationId: updateUserRole
+      tags: [users]
+      summary: Update a user's role (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserRoleBody"
+      responses:
+        "200":
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /fields:
+    get:
+      operationId: listFields
+      tags: [fields]
+      summary: List fields (admin sees all, agent sees assigned)
+      parameters:
+        - name: agentId
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: stage
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of fields
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Field"
+    post:
+      operationId: createField
+      tags: [fields]
+      summary: Create a new field (admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateFieldBody"
+      responses:
+        "201":
+          description: Created field
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Field"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /fields/{id}:
+    get:
+      operationId: getField
+      tags: [fields]
+      summary: Get a single field
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Field details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Field"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      operationId: updateField
+      tags: [fields]
+      summary: Update a field
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateFieldBody"
+      responses:
+        "200":
+          description: Updated field
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Field"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteField
+      tags: [fields]
+      summary: Delete a field (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /fields/{id}/assign:
+    patch:
+      operationId: assignField
+      tags: [fields]
+      summary: Assign a field to an agent (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssignFieldBody"
+      responses:
+        "200":
+          description: Updated field
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Field"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /fields/{id}/updates:
+    get:
+      operationId: listFieldUpdates
+      tags: [updates]
+      summary: Get all updates for a field
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of field updates
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FieldUpdate"
+    post:
+      operationId: createFieldUpdate
+      tags: [updates]
+      summary: Add an update/observation to a field
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateFieldUpdateBody"
+      responses:
+        "201":
+          description: Created update
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FieldUpdate"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Get dashboard summary statistics
+      responses:
+        "200":
+          description: Dashboard summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+
+  /dashboard/recent-activity:
+    get:
+      operationId: getRecentActivity
+      tags: [dashboard]
+      summary: Get recent field updates across all fields
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Recent activity feed
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ActivityItem"
+
+  /dashboard/stage-breakdown:
+    get:
+      operationId: getStageBreakdown
+      tags: [dashboard]
+      summary: Get count of fields by stage
+      responses:
+        "200":
+          description: Stage breakdown
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StageCount"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +377,251 @@ components:
       required:
         - status
 
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        clerkId:
+          type: string
+        email:
+          type: string
+        name:
+          type: ["string", "null"]
+        role:
+          type: string
+          enum: [admin, agent]
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - clerkId
+        - email
+        - role
+        - createdAt
+
+    UpdateUserRoleBody:
+      type: object
+      properties:
+        role:
+          type: string
+          enum: [admin, agent]
+      required:
+        - role
+
+    Field:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        cropType:
+          type: string
+        plantingDate:
+          type: string
+          format: date-time
+        currentStage:
+          type: string
+          enum: [planted, growing, ready, harvested]
+        status:
+          type: string
+          enum: [active, at_risk, completed]
+        notes:
+          type: ["string", "null"]
+        assignedAgentId:
+          type: ["integer", "null"]
+        assignedAgent:
+          $ref: "#/components/schemas/UserSummary"
+          nullable: true
+        location:
+          type: ["string", "null"]
+        areaHectares:
+          type: ["number", "null"]
+        lastUpdatedAt:
+          type: ["string", "null"]
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - cropType
+        - plantingDate
+        - currentStage
+        - status
+        - createdAt
+
+    UserSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: ["string", "null"]
+        email:
+          type: string
+      required:
+        - id
+        - email
+
+    CreateFieldBody:
+      type: object
+      properties:
+        name:
+          type: string
+        cropType:
+          type: string
+        plantingDate:
+          type: string
+          format: date-time
+        currentStage:
+          type: string
+          enum: [planted, growing, ready, harvested]
+        notes:
+          type: string
+        assignedAgentId:
+          type: integer
+        location:
+          type: string
+        areaHectares:
+          type: number
+      required:
+        - name
+        - cropType
+        - plantingDate
+        - currentStage
+
+    UpdateFieldBody:
+      type: object
+      properties:
+        name:
+          type: string
+        cropType:
+          type: string
+        plantingDate:
+          type: string
+          format: date-time
+        currentStage:
+          type: string
+          enum: [planted, growing, ready, harvested]
+        notes:
+          type: string
+        location:
+          type: string
+        areaHectares:
+          type: number
+
+    AssignFieldBody:
+      type: object
+      properties:
+        assignedAgentId:
+          type: ["integer", "null"]
+      required:
+        - assignedAgentId
+
+    FieldUpdate:
+      type: object
+      properties:
+        id:
+          type: integer
+        fieldId:
+          type: integer
+        agentId:
+          type: integer
+        stage:
+          type: ["string", "null"]
+          enum: [planted, growing, ready, harvested, null]
+        note:
+          type: ["string", "null"]
+        agentName:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - fieldId
+        - agentId
+        - createdAt
+
+    CreateFieldUpdateBody:
+      type: object
+      properties:
+        stage:
+          type: string
+          enum: [planted, growing, ready, harvested]
+        note:
+          type: string
+      required: []
+
+    DashboardSummary:
+      type: object
+      properties:
+        totalFields:
+          type: integer
+        activeFields:
+          type: integer
+        atRiskFields:
+          type: integer
+        completedFields:
+          type: integer
+        totalAgents:
+          type: integer
+        unassignedFields:
+          type: integer
+        recentUpdatesCount:
+          type: integer
+      required:
+        - totalFields
+        - activeFields
+        - atRiskFields
+        - completedFields
+        - totalAgents
+        - unassignedFields
+        - recentUpdatesCount
+
+    ActivityItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        fieldId:
+          type: integer
+        fieldName:
+          type: string
+        agentName:
+          type: ["string", "null"]
+        stage:
+          type: ["string", "null"]
+        note:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - fieldId
+        - fieldName
+        - createdAt
+
+    StageCount:
+      type: object
+      properties:
+        stage:
+          type: string
+        count:
+          type: integer
+      required:
+        - stage
+        - count
