@@ -128,3 +128,12 @@ This project is a functional prototype of an agricultural field monitoring syste
 **Sammy Kemboi**  
 Software Engineering Graduate  
 GitHub: https://github.com/samm2169  
+## 🔑 Demo Credentials
+
+### Admin
+Email: admin@smartseason.com  
+Password: admin123  
+
+### Field Agent
+Email: agent@smartseason.com  
+Password: agent123
