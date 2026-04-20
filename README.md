@@ -1,34 +1,104 @@
-# 🌱 Smart Season Tracker
+# 🌱 SmartSeason Field Monitoring System
 
-A web-based application designed to help users track seasonal patterns and make informed decisions based on environmental and time-based data.
+A full-stack agricultural operations platform designed to help coordinators and field agents track crop lifecycle stages, manage field data, and monitor operational risks in real time.
 
 ---
 
 ## 🚀 Overview
 
-Smart Season Tracker is a full-stack web application that allows users to monitor and analyze seasonal changes through a simple and intuitive interface.  
-It focuses on clean data handling, responsive design, and practical usability.
+SmartSeason is a field monitoring system built to simulate real-world agricultural operations. It enables structured tracking of fields from planting to harvest, with role-based access for administrators and field agents.
 
-This project was built as part of hands-on software engineering practice, emphasizing real-world application development and deployment.
+The system focuses on **clean data management, operational visibility, and simple decision support for agricultural workflows.**
 
 ---
 
-## ✨ Features
+## 🔐 Authentication & Access Control
 
-- 📊 Track seasonal data over time  
-- 🧭 Simple and user-friendly interface  
-- ⚡ Fast and responsive design  
-- 🔄 Real-time updates and interaction handling  
-- 📱 Accessible across devices  
+The system includes a working authentication flow:
+
+- User registration (Sign Up)
+- Secure login system
+- Session-based access control
+
+### Roles
+
+#### 👨‍💼 Admin (Coordinator)
+- Manages all fields in the system
+- Monitors crop progress across all agents
+- Reviews field updates and risks
+
+#### 🌾 Field Agent
+- Accesses only assigned fields
+- Updates crop stages
+- Adds field observations and notes
+
+---
+
+## 🌱 Core Features
+
+- Field creation and management  
+- Assignment of fields to agents  
+- Crop lifecycle tracking system  
+- Field stage updates (Planted → Growing → Ready → Harvested)  
+- Real-time field updates via database  
+- Role-based dashboards  
+- Basic risk and status monitoring  
+
+---
+
+## 🧠 Field Lifecycle Model
+
+Fields progress through a structured lifecycle:
+
+- **Planted** → Initial crop planting stage  
+- **Growing** → Active growth phase  
+- **Ready** → Near harvest stage  
+- **Harvested** → Completed cycle  
+
+---
+
+## ⚙️ Status Logic
+
+Each field is assigned a computed status based on its lifecycle stage and activity:
+
+- **Active** → Field is currently progressing through lifecycle stages  
+- **At Risk** → Field shows delayed updates or abnormal progression  
+- **Completed** → Field has reached harvest stage  
+
+This logic simulates real-world agricultural monitoring systems.
+
+---
+
+## 🗄️ Data & Architecture
+
+- Database-backed system for persistent field storage  
+- Structured field entities with lifecycle attributes  
+- Separation between user roles and field data  
+- Modular design for scalability  
+
+---
+
+## 📊 Dashboard Overview
+
+### Admin Dashboard
+- View all fields across the system  
+- Monitor crop stages and status distribution  
+- Track field activity across agents  
+
+### Field Agent Dashboard
+- View assigned fields only  
+- Update crop stages  
+- Add notes and observations  
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Frontend:** HTML, CSS, JavaScript  
-- **Backend:** Node.js (if applicable in your project)  
-- **Package Manager:** pnpm / npm  
-- **Tools:** Git, GitHub, Replit  
+- Frontend: HTML / CSS / JavaScript  
+- Backend: Node.js (or your actual backend)  
+- Database: SQL / NoSQL (your implementation)  
+- Authentication: Session-based / JWT (if used)  
+- Hosting: Replit deployment  
 
 ---
 
@@ -38,4 +108,23 @@ This project was built as part of hands-on software engineering practice, emphas
 
 ---
 
-## 📁 Project Structure
+## 🧩 Key Engineering Decisions
+
+- Prioritized simplicity over over-engineering  
+- Designed role-based separation for realistic operations  
+- Implemented lifecycle-based field tracking model  
+- Used modular structure for maintainability  
+
+---
+
+## 📌 Notes
+
+This project is a functional prototype of an agricultural field monitoring system. Some advanced analytics and production-level optimizations can be extended in future iterations.
+
+---
+
+## 👨‍💻 Author
+
+**Sammy Kemboi**  
+Software Engineering Graduate  
+GitHub: https://github.com/samm2169  
